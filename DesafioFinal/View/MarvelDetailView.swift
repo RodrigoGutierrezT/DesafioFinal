@@ -9,52 +9,12 @@ import SwiftUI
 
 struct MarvelDetailView: View {
     let id: Int
-    @State private var heroDetail: MarvelHeroDetail? = nil
-    @State private var isLoading = true
-    @State private var errorMessage: String? = nil
     
-    private let url: URL
+    @State private var viewModel: MarvelDetailViewModel
     
     init(id: Int) {
         self.id = id
-        self.url = URL(string: "https://heroes-api-two.vercel.app/es/marvel/heroes/\(id)")!
-    }
-    
-    // Fetch hero details based on the id
-    func fetchHeroDetails() {
-        isLoading = true
-        errorMessage = nil
-        
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                DispatchQueue.main.async {
-                    self.errorMessage = "Failed to load data: \(error.localizedDescription)"
-                    self.isLoading = false
-                }
-                return
-            }
-            
-            guard let data = data else {
-                DispatchQueue.main.async {
-                    self.errorMessage = "No data received"
-                    self.isLoading = false
-                }
-                return
-            }
-            
-            do {
-                let decodedHero = try JSONDecoder().decode(MarvelHeroDetail.self, from: data)
-                DispatchQueue.main.async {
-                    self.heroDetail = decodedHero
-                    self.isLoading = false
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    self.errorMessage = "Failed to decode data"
-                    self.isLoading = false
-                }
-            }
-        }.resume()
+        _viewModel = State(initialValue: MarvelDetailViewModel(id: id))
     }
     
     var body: some View {
@@ -63,13 +23,13 @@ struct MarvelDetailView: View {
                 .ignoresSafeArea()
             
             VStack {
-                if isLoading {
+                if viewModel.isLoading {
                     ProgressView("Loading hero details...")
-                } else if let errorMessage = errorMessage {
+                } else if let errorMessage = viewModel.errorMessage {
                     Text(errorMessage)
                         .foregroundColor(.red)
                         .padding()
-                } else if let heroDetail = heroDetail {
+                } else if let heroDetail = viewModel.heroDetail {
                     ScrollView {
                         VStack(alignment: .center) {
                             
@@ -109,7 +69,7 @@ struct MarvelDetailView: View {
                                                 .fill(Color.green)
                                                 .frame(height: 4)
                                                 .padding(.bottom, 10)
-
+                                            
                                         }
                                     }
                                     
@@ -133,9 +93,6 @@ struct MarvelDetailView: View {
                         }
                     }
                 }
-            }
-            .onAppear {
-                fetchHeroDetails() // Fetch hero details when the view appears
             }
         }
     }
