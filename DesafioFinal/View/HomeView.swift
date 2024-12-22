@@ -26,7 +26,7 @@ struct HomeView: View {
                     Spacer()
                     
                     CustomButton(label: "Ver Heroes de Marvel", destination: AnyView(MarvelListView()))
-                    CustomButton(label: "Ver mis heroes", destination: AnyView(MarvelListView()))
+                    CustomButton(label: "Ver mis heroes", destination: AnyView(MyHeroView()))
                     
                     Spacer()
                 }

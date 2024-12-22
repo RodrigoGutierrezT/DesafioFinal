@@ -27,6 +27,6 @@ struct RemoteImage: View {
 }
 
 #Preview {
-    var imgURL = URL(string: "https://i.ibb.co/D77n08V/ironman.jpg")!
+    let imgURL = URL(string: "https://i.ibb.co/D77n08V/ironman.jpg")!
     RemoteImage(url: imgURL, width: 200, height: 200)
 }
