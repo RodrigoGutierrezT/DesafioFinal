@@ -22,11 +22,15 @@ struct HomeView: View {
                         .scaledToFit()
                         .clipShape(RoundedRectangle(cornerRadius: 25))
                         .padding()
+                        .accessibilityIdentifier("homeImage")
                     
                     Spacer()
                     
                     CustomButton(label: "Ver Heroes de Marvel", destination: AnyView(MarvelListView()))
+                        .accessibilityIdentifier("marvelHeroesButton")
+                    
                     CustomButton(label: "Ver mis heroes", destination: AnyView(MyHeroView()))
+                        .accessibilityIdentifier("myHeroesButton")
                     
                     Spacer()
                 }
